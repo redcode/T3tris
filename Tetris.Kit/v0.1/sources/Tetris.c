@@ -345,7 +345,7 @@ TETRIS_API void tetris_remove_full_rows(Tetris *object)
 		{
 		zuint delta = 0, size;
 		zuint x_size = object->size.x;
-		zuint8 index = row_count;
+		zuint8 index;
 		TetrisCell *matrix = object->matrix, *row, *row_above, *row_below, cell;
 
 		while (row_count)
