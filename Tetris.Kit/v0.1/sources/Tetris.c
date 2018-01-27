@@ -339,12 +339,11 @@ TETRIS_API TetrisResult tetris_drop_piece(Tetris *object)
 TETRIS_API void tetris_remove_full_rows(Tetris *object)
 	{
 	zuint8 row_count = object->full_row_count;
-	zuint *full_row_indices = object->full_row_indices;
 
 	if (row_count)
 		{
-		zuint delta = 0, size;
-		zuint x_size = object->size.x;
+		zuint *full_row_indices = object->full_row_indices;
+		zuint delta = 0, size, x_size = object->size.x;
 		zuint8 index;
 		TetrisCell *matrix = object->matrix, *row, *row_above, *row_below, cell;
 
