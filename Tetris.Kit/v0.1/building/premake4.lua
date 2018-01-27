@@ -10,11 +10,11 @@ solution "Tetris"
 		--buildoptions {"-std=c89 -pedantic"}
 
 		configuration "Release*"
-			targetdir "bin/release"
+			targetdir "lib/release"
 
 		configuration "Debug*"
 			flags {"Symbols"}
-			targetdir "bin/debug"
+			targetdir "lib/debug"
 
 		configuration "*Dynamic"
 			kind "SharedLib"
