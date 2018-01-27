@@ -96,4 +96,3 @@ TETRIS_API void		tetris_remove_full_rows(Tetris*  object);
 Z_C_SYMBOLS_END
 
 #endif /* __games_puzzle_Tetris_H__ */
-

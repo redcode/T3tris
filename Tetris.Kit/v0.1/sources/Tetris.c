@@ -384,4 +384,3 @@ TETRIS_API void tetris_remove_full_rows(Tetris *object)
 
 
 /* Tetris.c EOF */
-
