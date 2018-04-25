@@ -5,7 +5,7 @@
 Copyright (C) 2000-2018 Manuel Sainz de Baranda y Goñi.
 Released under the terms of the GNU Lesser General Public License v3. */
 
-#include <Z/functions/base/Z2DValue.h>
+#include <Z/functions/base/Z2D.h>
 
 #ifndef TETRIS_STATIC
 #	define TETRIS_API Z_API_EXPORT
