@@ -44,8 +44,7 @@ Z_DEFINE_STRICT_UNION (
 
 typedef struct {
 	TetrisCell matrix[4][4];
-	Z2DSInt8   a;
-	Z2DSInt8   b;
+	Z2DSInt8   a, b;
 } TetrisPiece;
 
 typedef struct {
