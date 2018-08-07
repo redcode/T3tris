@@ -160,19 +160,19 @@ TETRIS_API TetrisPiece const tetris_pieces[7][4] = {
 };
 
 
-static zuint8 bounds_hit(Tetris const *object, TetrisPiece const *piece, Z2DSInt piece_point)
+static zuint8 bounds_hit(Tetris const *object, TetrisPiece const *piece, Z2DSInt8 piece_point)
 	{
 	return	piece_point.x + piece->a.x < 0 ||
-		piece_point.x + piece->b.x >= (zsint)object->size.x
+		piece_point.x + piece->b.x >= object->size.x
 			? HIT_SIDE
-			: (piece_point.y + piece->b.y >= (zsint)object->size.y
+			: (piece_point.y + piece->b.y >= object->size.y
 				? HIT_BOTTOM : 0);
 	}
 
 
-static zboolean content_hit(Tetris const *object, TetrisPiece const *piece, Z2DSInt piece_point)
+static zboolean content_hit(Tetris const *object, TetrisPiece const *piece, Z2DSInt8 piece_point)
 	{
-	zuint x, y = piece_point.y + piece->a.y < 0 ? -piece_point.y : piece->a.y;
+	zsint x, y = piece_point.y + piece->a.y < 0 ? -piece_point.y : piece->a.y;
 
 	for (; y <= piece->b.y; y++) for (x = piece->a.x; x <= piece->b.x; x++) if (
 		piece->matrix[y][x].value &&
@@ -186,7 +186,7 @@ static zboolean content_hit(Tetris const *object, TetrisPiece const *piece, Z2DS
 
 static void consolidate(Tetris *object)
 	{
-	zuint x, y;
+	zsint x, y;
 	zuint8 v;
 	TetrisPiece const *piece = object->piece;
 
@@ -202,13 +202,13 @@ static void consolidate(Tetris *object)
 
 		if (NULL == z_block_int8_find_value
 			(object->matrix + object->size.x * (object->piece_point.y + y),
-			 object->size.x, 0)
+			 (zusize)object->size.x, 0)
 		)
 			object->full_row_indices[object->full_row_count++]
-			= object->piece_point.y + y;
+			= (zsint8)(object->piece_point.y + y);
 		}
 
-	if (object->piece_point.y + piece->a.y < (zsint)object->top)
+	if (object->piece_point.y + piece->a.y < object->top)
 		object->top = object->piece_point.y + piece->a.y;
 	}
 
@@ -216,7 +216,7 @@ static void consolidate(Tetris *object)
 TETRIS_API void tetris_initialize(Tetris *object)
 	{
 	object->matrix = NULL;
-	object->size   = z_2d_type_zero(UINT);
+	object->size   = z_2d_sint8_zero;
 	}
 
 
@@ -224,21 +224,15 @@ TETRIS_API void tetris_finalize(Tetris *object)
 	{z_deallocate(object->matrix);}
 
 
-TETRIS_API ZStatus tetris_prepare(Tetris *object, Z2DUInt size, zuint8 next_piece_index)
+TETRIS_API ZStatus tetris_prepare(Tetris *object, Z2DSInt8 size, zuint8 next_piece_index)
 	{
-	zuint matrix_size;
+	zusize matrix_size;
 
 	if (size.x < TETRIS_MINIMUM_SIZE_X || size.y < TETRIS_MINIMUM_SIZE_Y)
 		return Z_ERROR_TOO_SMALL;
 
-	if (	size.x > (zuint)Z_SINT_MAXIMUM ||
-		size.y > (zuint)Z_SINT_MAXIMUM ||
-		z_type_multiplication_overflows(UINT)(size.x, size.y)
-	)
-		return Z_ERROR_TOO_BIG;
-
-	if (	z_2d_type_inner_product(UINT)(object->size) !=
-		(matrix_size = z_2d_type_inner_product(UINT)(size))
+	if (	(zusize)(object->size.x * object->size.y) !=
+		(matrix_size = (zusize)(size.x * size.y))
 	)
 		{
 		void *matrix = z_reallocate(object->matrix, matrix_size);
@@ -260,7 +254,7 @@ TETRIS_API ZStatus tetris_prepare(Tetris *object, Z2DUInt size, zuint8 next_piec
 
 TETRIS_API void tetris_insert_piece(Tetris *object, zuint8 next_piece_index)
 	{
-	object->piece_point	 = z_2d_type(SINT)((object->size.x - 4) / 2, -3);
+	object->piece_point	 = z_2d_sint8((object->size.x - 4) / 2, -3);
 	object->piece_rotation	 = 0;
 	object->piece		 = object->next_piece;
 	object->piece_index	 = object->next_piece_index;
@@ -272,10 +266,7 @@ TETRIS_API void tetris_insert_piece(Tetris *object, zuint8 next_piece_index)
 TETRIS_API TetrisResult tetris_move_piece(Tetris *object, Z2DSInt8 movement)
 	{
 	TetrisPiece const *piece = object->piece;
-
-	Z2DSInt point = z_2d_type(SINT)
-		(object->piece_point.x + movement.x, object->piece_point.y + movement.y);
-
+	Z2DSInt8 point = z_2d_sint8_add(object->piece_point, movement);
 	zuint8 hit = bounds_hit(object, piece, point);
 
 	if (hit)
@@ -309,7 +300,7 @@ TETRIS_API TetrisResult tetris_rotate_piece(Tetris *object, zsint8 rotation)
 	)
 		return TETRIS_RESULT_HIT;
 
-	object->piece_rotation = rotation;
+	object->piece_rotation = (zuint8)rotation;
 	object->piece = piece;
 	return Z_OK;
 	}
@@ -318,7 +309,7 @@ TETRIS_API TetrisResult tetris_rotate_piece(Tetris *object, zsint8 rotation)
 TETRIS_API TetrisResult tetris_drop_piece(Tetris *object)
 	{
 	TetrisPiece const *piece = object->piece;
-	Z2DSInt point = object->piece_point;
+	Z2DSInt8 point = object->piece_point;
 
 	for (	point.y++;
 		!bounds_hit(object, piece, point) && !content_hit(object, piece, point);
@@ -342,9 +333,8 @@ TETRIS_API void tetris_remove_full_rows(Tetris *object)
 
 	if (row_count)
 		{
-		zuint *full_row_indices = object->full_row_indices;
-		zuint delta = 0, size, x_size = object->size.x;
-		zuint8 index;
+		zsint8 *full_row_indices = object->full_row_indices;
+		zsint delta = 0, index, size, x_size = object->size.x;
 		TetrisCell *matrix = object->matrix, *row, *row_above, *row_below, cell;
 
 		while (row_count)

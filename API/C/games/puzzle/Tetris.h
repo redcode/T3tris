@@ -44,18 +44,18 @@ Z_DEFINE_STRICT_UNION (
 
 typedef struct {
 	TetrisCell matrix[4][4];
-	Z2DUInt8   a;
-	Z2DUInt8   b;
+	Z2DSInt8   a;
+	Z2DSInt8   b;
 } TetrisPiece;
 
 typedef struct {
 	TetrisCell*	   matrix;
-	Z2DUInt		   size;
-	zuint		   top;
+	Z2DSInt8	   size;
+	zsint8		   top;
 	TetrisPiece const* piece;
 	TetrisPiece const* next_piece;
-	Z2DSInt		   piece_point;
-	zuint		   full_row_indices[4];
+	Z2DSInt8	   piece_point;
+	zsint8		   full_row_indices[4];
 	zuint8		   full_row_count;
 	zuint8		   piece_index;
 	zuint8		   piece_rotation;
@@ -77,7 +77,7 @@ TETRIS_API void		tetris_initialize      (Tetris*  object);
 TETRIS_API void		tetris_finalize	       (Tetris*  object);
 
 TETRIS_API ZStatus	tetris_prepare	       (Tetris*  object,
-						Z2DUInt  size,
+						Z2DSInt8 size,
 						zuint8	 next_piece_index);
 
 TETRIS_API void		tetris_insert_piece    (Tetris*  object,
