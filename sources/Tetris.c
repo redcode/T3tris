@@ -162,17 +162,17 @@ TETRIS_API TetrisPiece const tetris_pieces[7][4] = {
 
 static zuint8 bounds_hit(Tetris const *object, TetrisPiece const *piece, Z2DSInt8 piece_point)
 	{
-	return	piece_point.x + piece->a.x < 0 ||
-		piece_point.x + piece->b.x >= object->size.x
+	return	(zsint)piece_point.x + (zsint)piece->a.x < 0 ||
+		(zsint)piece_point.x + (zsint)piece->b.x >= (zsint)object->size.x
 			? HIT_SIDE
-			: (piece_point.y + piece->b.y >= object->size.y
+			: ((zsint)piece_point.y + (zsint)piece->b.y >= (zsint)object->size.y
 				? HIT_BOTTOM : 0);
 	}
 
 
 static zboolean content_hit(Tetris const *object, TetrisPiece const *piece, Z2DSInt8 piece_point)
 	{
-	zsint x, y = piece_point.y + piece->a.y < 0 ? -piece_point.y : piece->a.y;
+	zsint x, y = (zsint)piece_point.y + (zsint)piece->a.y < 0 ? -piece_point.y : piece->a.y;
 
 	for (; y <= piece->b.y; y++) for (x = piece->a.x; x <= piece->b.x; x++) if (
 		piece->matrix[y][x].value &&
