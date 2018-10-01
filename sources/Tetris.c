@@ -162,17 +162,17 @@ TETRIS_API TetrisPiece const tetris_pieces[7][4] = {
 
 static zuint8 bounds_hit(Tetris const *object, TetrisPiece const *piece, Z2DSInt8 piece_point)
 	{
-	return	(zsint)piece_point.x + (zsint)piece->a.x < 0 ||
-		(zsint)piece_point.x + (zsint)piece->b.x >= (zsint)object->size.x
+	return	(zsint)piece_point.x + piece->a.x < 0 ||
+		(zsint)piece_point.x + piece->b.x >= object->size.x
 			? HIT_SIDE
-			: ((zsint)piece_point.y + (zsint)piece->b.y >= (zsint)object->size.y
+			: ((zsint)piece_point.y + piece->b.y >= object->size.y
 				? HIT_BOTTOM : 0);
 	}
 
 
 static zboolean content_hit(Tetris const *object, TetrisPiece const *piece, Z2DSInt8 piece_point)
 	{
-	zsint x, y = (zsint)piece_point.y + (zsint)piece->a.y < 0 ? -piece_point.y : piece->a.y;
+	zsint x, y = (zsint)piece_point.y + piece->a.y < 0 ? -piece_point.y : piece->a.y;
 
 	for (; y <= piece->b.y; y++) for (x = piece->a.x; x <= piece->b.x; x++) if (
 		piece->matrix[y][x].value &&
@@ -231,8 +231,8 @@ TETRIS_API ZStatus tetris_prepare(Tetris *object, Z2DSInt8 size, zuint8 next_pie
 	if (size.x < TETRIS_MINIMUM_SIZE_X || size.y < TETRIS_MINIMUM_SIZE_Y)
 		return Z_ERROR_TOO_SMALL;
 
-	if (	(zusize)(object->size.x * object->size.y) !=
-		(matrix_size = (zusize)(size.x * size.y))
+	if (	(zusize)object->size.x * (zusize)object->size.y !=
+		(matrix_size = (zusize)size.x * (zusize)size.y)
 	)
 		{
 		void *matrix = z_reallocate(object->matrix, matrix_size);
@@ -254,7 +254,8 @@ TETRIS_API ZStatus tetris_prepare(Tetris *object, Z2DSInt8 size, zuint8 next_pie
 
 TETRIS_API void tetris_insert_piece(Tetris *object, zuint8 next_piece_index)
 	{
-	object->piece_point	 = z_2d_sint8((object->size.x - 4) / 2, -3);
+	object->piece_point.x	 = (object->size.x - 4) / 2;
+	object->piece_point.y	 = -3;
 	object->piece_rotation	 = 0;
 	object->piece		 = object->next_piece;
 	object->piece_index	 = object->next_piece_index;
@@ -263,22 +264,25 @@ TETRIS_API void tetris_insert_piece(Tetris *object, zuint8 next_piece_index)
 	}
 
 
-TETRIS_API TetrisResult tetris_move_piece(Tetris *object, Z2DSInt8 movement)
+TETRIS_API TetrisResult tetris_move_piece(Tetris *object, TetrisDirection direction)
 	{
 	TetrisPiece const *piece = object->piece;
-	Z2DSInt8 point = z_2d_sint8_add(object->piece_point, movement);
+
+	Z2DSInt8 point = direction
+		? z_2d_sint8(object->piece_point.x + direction, object->piece_point.y)
+		: z_2d_sint8(object->piece_point.x, object->piece_point.y + 1);
+
 	zuint8 hit = bounds_hit(object, piece, point);
 
 	if (hit)
 		{
 		if (hit == HIT_SIDE) return TETRIS_RESULT_HIT;
-		consolidate(object);
-		return TETRIS_RESULT_CONSOLIDATED;
+		consolidate(object); return TETRIS_RESULT_CONSOLIDATED;
 		}
 
 	if (content_hit(object, piece, point))
 		{
-		if (movement.y <= 0) return TETRIS_RESULT_HIT;
+		if (direction) return TETRIS_RESULT_HIT;
 		if (object->piece_point.y + piece->a.y < 0) return TETRIS_RESULT_GAME_OVER;
 		consolidate(object);
 		return TETRIS_RESULT_CONSOLIDATED;
@@ -289,11 +293,10 @@ TETRIS_API TetrisResult tetris_move_piece(Tetris *object, Z2DSInt8 movement)
 	}
 
 
-TETRIS_API TetrisResult tetris_rotate_piece(Tetris *object, zsint8 rotation)
+TETRIS_API TetrisResult tetris_rotate_piece(Tetris *object, TetrisDirection direction)
 	{
-	TetrisPiece const *piece = &tetris_pieces
-		[object->piece_index]
-		[rotation = (object->piece_rotation + rotation) % 4];
+	zuint8 rotation = (object->piece_rotation + direction) & 3;
+	TetrisPiece const *piece = &tetris_pieces[object->piece_index][rotation];
 
 	if (	bounds_hit (object, piece, object->piece_point) ||
 		content_hit(object, piece, object->piece_point)
@@ -311,10 +314,8 @@ TETRIS_API TetrisResult tetris_drop_piece(Tetris *object)
 	TetrisPiece const *piece = object->piece;
 	Z2DSInt8 point = object->piece_point;
 
-	for (	point.y++;
-		!bounds_hit(object, piece, point) && !content_hit(object, piece, point);
-		point.y++
-	);
+	do point.y++;
+	while (!bounds_hit(object, piece, point) && !content_hit(object, piece, point));
 
 	if ((object->piece_point.y = point.y - 1) + piece->a.y < 0)
 		return TETRIS_RESULT_GAME_OVER;

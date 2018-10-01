@@ -67,30 +67,36 @@ typedef zuint8 TetrisResult;
 #define TETRIS_RESULT_CONSOLIDATED 2
 #define TETRIS_RESULT_GAME_OVER    3
 
+typedef zsint8 TetrisDirection;
+
+#define TETRIS_DIRECTION_DOWN	0
+#define TETRIS_DIRECTION_LEFT  -1
+#define TETRIS_DIRECTION_RIGHT	1
+
 Z_C_SYMBOLS_BEGIN
 
 TETRIS_API extern TetrisPiece const tetris_pieces[TETRIS_PIECE_COUNT][4];
 
-TETRIS_API void		tetris_initialize      (Tetris*  object);
+TETRIS_API void		tetris_initialize      (Tetris*		object);
 
-TETRIS_API void		tetris_finalize	       (Tetris*  object);
+TETRIS_API void		tetris_finalize	       (Tetris*		object);
 
-TETRIS_API ZStatus	tetris_prepare	       (Tetris*  object,
-						Z2DSInt8 size,
-						zuint8	 next_piece_index);
+TETRIS_API ZStatus	tetris_prepare	       (Tetris*		object,
+						Z2DSInt8	size,
+						zuint8		next_piece_index);
 
-TETRIS_API void		tetris_insert_piece    (Tetris*  object,
-						zuint8	 next_piece_index);
+TETRIS_API void		tetris_insert_piece    (Tetris*		object,
+						zuint8		next_piece_index);
 
-TETRIS_API TetrisResult tetris_move_piece      (Tetris*  object,
-						Z2DSInt8 movement);
+TETRIS_API TetrisResult tetris_move_piece      (Tetris*		object,
+						TetrisDirection direction);
 
-TETRIS_API TetrisResult tetris_rotate_piece    (Tetris*  object,
-						zsint8	 rotation);
+TETRIS_API TetrisResult tetris_rotate_piece    (Tetris*		object,
+						TetrisDirection	direction);
 
-TETRIS_API TetrisResult tetris_drop_piece      (Tetris*  object);
+TETRIS_API TetrisResult tetris_drop_piece      (Tetris*		object);
 
-TETRIS_API void		tetris_remove_full_rows(Tetris*  object);
+TETRIS_API void		tetris_remove_full_rows(Tetris*		object);
 
 Z_C_SYMBOLS_END
 
