@@ -71,7 +71,7 @@
 				64A0195D17C6C35800125709 /* Tetris.h */,
 			);
 			name = API;
-			path = ../../API/C/games/puzzle;
+			path = ../../API/games/puzzle;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,7 +202,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
-					../../API/C,
+					../../API,
 				);
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
@@ -230,7 +230,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
-					../../API/C,
+					../../API,
 				);
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;

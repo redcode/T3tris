@@ -5,7 +5,7 @@ solution "Tetris"
 		language "C"
 		flags {"ExtraWarnings"}
 		files {"../sources/**.c"}
-		includedirs {"../API/C"}
+		includedirs {"../API"}
 		defines {"TETRIS_USE_C_STANDARD_LIBRARY"}
 		--buildoptions {"-std=c89 -pedantic -Wall"}
 
