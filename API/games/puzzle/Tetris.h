@@ -5,8 +5,8 @@
 Copyright (C) 2000-2018 Manuel Sainz de Baranda y Goñi.
 Released under the terms of the GNU Lesser General Public License v3. */
 
-#ifndef __games_puzzle_Tetris_H__
-#define __games_puzzle_Tetris_H__
+#ifndef _games_puzzle_Tetris_H_
+#define _games_puzzle_Tetris_H_
 
 #include <Z/types/base.h>
 #include <Z/keys/status.h>
@@ -100,4 +100,4 @@ TETRIS_API void		tetris_remove_full_rows(Tetris*		object);
 
 Z_C_SYMBOLS_END
 
-#endif /* __games_puzzle_Tetris_H__ */
+#endif /* _games_puzzle_Tetris_H_ */
