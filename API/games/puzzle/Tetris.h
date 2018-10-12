@@ -49,11 +49,11 @@ typedef struct {
 
 typedef struct {
 	TetrisCell*	   matrix;
-	Z2DSInt8	   size;
-	zsint8		   top;
 	TetrisPiece const* piece;
 	TetrisPiece const* next_piece;
 	Z2DSInt8	   piece_point;
+	Z2DSInt8	   size;
+	zsint8		   top;
 	zsint8		   full_row_indices[4];
 	zuint8		   full_row_count;
 	zuint8		   piece_index;
