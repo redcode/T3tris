@@ -1,9 +1,22 @@
-/* Tetris Kit API - Tetris.h
- __________ __________  __   ____
-/_   _/  -_)_   _/  - )(__)_/  _/
- /__/ \___/ /__//__\__/__/____/
+/* Tetris Game Logic
+ ______ ____ ______ ______ __  _____
+|_    _|  __|_    _|  _  /|__|/  __/
+  |  | |  _|  |  | |     \|  |\__  \
+- |__| |____| |__| |__|\__|__|/____/ -----------------------------------------
 Copyright (C) 2000-2018 Manuel Sainz de Baranda y Goñi.
-Released under the terms of the GNU Lesser General Public License v3. */
+
+This library is free software:  you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published  by the Free Software
+Foundation, either  version 3 of  the License, or  (at your option)  any later
+version.
+
+This library is distributed  in the hope that it will  be useful,  but WITHOUT
+ANY WARRANTY; without even the  implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received  a copy of the GNU General Public License  along with
+this library. If not, see <http://www.gnu.org/licenses/>.
+--------------------------------------------------------------------------- */
 
 #ifndef _games_puzzle_Tetris_H_
 #define _games_puzzle_Tetris_H_
@@ -24,7 +37,7 @@ Released under the terms of the GNU Lesser General Public License v3. */
 #define TETRIS_MINIMUM_SIZE_X	 8
 #define TETRIS_MINIMUM_SIZE_Y	 8
 
-Z_DEFINE_STRICT_UNION (
+typedef union {
 	zuint8 value;
 
 	struct {Z_BIT_FIELD(8, 5) (
@@ -34,7 +47,7 @@ Z_DEFINE_STRICT_UNION (
 		zuint8 left_edge   :1,
 		zuint8 piece_index :4
 	)} fields;
-) TetrisCell;
+} TetrisCell;
 
 #define TETRIS_CELL_MASK_TOP_EDGE    0x80
 #define TETRIS_CELL_MASK_RIGHT_EDGE  0x40
@@ -77,11 +90,8 @@ Z_C_SYMBOLS_BEGIN
 
 TETRIS_API extern TetrisPiece const tetris_pieces[TETRIS_PIECE_COUNT][4];
 
-TETRIS_API void		tetris_initialize      (Tetris*		object);
-
-TETRIS_API void		tetris_finalize	       (Tetris*		object);
-
-TETRIS_API ZStatus	tetris_prepare	       (Tetris*		object,
+TETRIS_API void		tetris_initialize      (Tetris*		object,
+						TetrisCell*	matrix,
 						Z2DSInt8	size,
 						zuint8		next_piece_index);
 
