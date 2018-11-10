@@ -1,5 +1,5 @@
 solution "Tetris"
-	configurations {"Release-Dynamic", "Release-Static", "Debug-Dynamic", "Debug-Static"}
+	configurations {"release-dynamic", "release-static", "debug-dynamic", "debug-static"}
 
 	project "Tetris"
 		language "C"
@@ -9,16 +9,16 @@ solution "Tetris"
 		defines {"TETRIS_USE_C_STANDARD_LIBRARY"}
 		--buildoptions {"-std=c89 -pedantic -Wall -Weverything"}
 
-		configuration "Release*"
+		configuration "release*"
 			targetdir "lib/release"
 
-		configuration "Debug*"
+		configuration "debug*"
 			flags {"Symbols"}
 			targetdir "lib/debug"
 
-		configuration "*Dynamic"
+		configuration "*dynamic"
 			kind "SharedLib"
 
-		configuration "*Static"
+		configuration "*static"
 			kind "StaticLib"
 			defines {"TETRIS_STATIC"}
