@@ -1,0 +1,12 @@
+ ______ ____ ______ ______ __  _____
+|_    _|  __|_    _|  _  /|__|/  __/
+  |  | |  _|  |  | |     \|  |\__  \
+  |__| |____| |__| |__|\__|__|/____/ v0.1 (Game Logic)
+Copyright (C) 2000-2018 Manuel Sainz de Baranda y Goñi.
+
+This library implements the logic behing famous Tetris puzzle game.
+
+
+TETRIS_DEPENDENCIES_H
+TETRIS_STATIC
+TETRIS_USE_C_STANDARD_LIBRARY

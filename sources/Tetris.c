@@ -33,8 +33,11 @@ this library. If not, see <http://www.gnu.org/licenses/>.
 #ifdef TETRIS_USE_C_STANDARD_LIBRARY
 #	include <string.h>
 
-#	define z_move(block, block_size, output)	  memmove(output, block, block_size)
-#	define z_block_int8_set(block, block_size, value) memset(block, value, block_size)
+#	define z_move(block, block_size, output) \
+		memmove(output, block, block_size)
+
+#	define z_block_int8_set(block, block_size, value) \
+		memset(block, value, block_size)
 
 #	define z_block_int8_find_value(block, block_size, value) \
 		memchr(block, value, block_size)
@@ -225,28 +228,28 @@ static void consolidate(Tetris *object)
 TETRIS_API void tetris_initialize(
 	Tetris*	    object,
 	TetrisCell* matrix,
-	Z2DSInt8    size,
+	Z2DSInt8    matrix_size,
 	zuint8	    next_piece_index
 )
 	{
 	z_block_int8_set(matrix, (zusize)size.x * (zusize)size.y, 0);
 
 	object->matrix		 = matrix;
-	object->size		 = size;
-	object->top		 = size.y;
 	object->piece		 = NULL;
-	object->full_row_count	 = 0;
 	object->next_piece	 = tetris_pieces[next_piece_index];
+	object->matrix_size	 = matrix_size;
 	object->next_piece_index = next_piece_index;
+	object->top		 = matrix_size.y;
+	object->full_row_count	 = 0;
 	}
 
 
 TETRIS_API void tetris_insert_piece(Tetris *object, zuint8 next_piece_index)
 	{
+	object->piece		 = object->next_piece;
 	object->piece_point.x	 = (object->size.x - 4) / 2;
 	object->piece_point.y	 = -3;
 	object->piece_rotation	 = 0;
-	object->piece		 = object->next_piece;
 	object->piece_index	 = object->next_piece_index;
 	object->next_piece_index = next_piece_index;
 	object->next_piece	 = tetris_pieces[next_piece_index];
@@ -278,7 +281,7 @@ TETRIS_API TetrisResult tetris_move_piece(Tetris *object, TetrisDirection direct
 		}
 
 	object->piece_point = point;
-	return Z_OK;
+	return TETRIS_RESULT_OK;
 	}
 
 
@@ -294,7 +297,7 @@ TETRIS_API TetrisResult tetris_rotate_piece(Tetris *object, TetrisDirection dire
 
 	object->piece_rotation = (zuint8)rotation;
 	object->piece = piece;
-	return Z_OK;
+	return TETRIS_RESULT_OK;
 	}
 
 

@@ -22,7 +22,6 @@ this library. If not, see <http://www.gnu.org/licenses/>.
 #define _games_puzzle_Tetris_H_
 
 #include <Z/types/base.h>
-#include <Z/keys/status.h>
 
 #ifndef TETRIS_API
 #	ifdef TETRIS_STATIC
@@ -34,8 +33,8 @@ this library. If not, see <http://www.gnu.org/licenses/>.
 
 #define TETRIS_PIECE_COUNT	 7
 #define TETRIS_INSERTION_PADDING 3
-#define TETRIS_MINIMUM_SIZE_X	 8
-#define TETRIS_MINIMUM_SIZE_Y	 8
+#define TETRIS_MINIMUM_WIDTH	 8
+#define TETRIS_MINIMUM_HEIGHT	 8
 
 typedef union {
 	zuint8 value;
@@ -64,18 +63,19 @@ typedef struct {
 	TetrisCell*	   matrix;
 	TetrisPiece const* piece;
 	TetrisPiece const* next_piece;
+	Z2DSInt8	   matrix_size;
 	Z2DSInt8	   piece_point;
-	Z2DSInt8	   size;
+	zuint8		   piece_rotation;
+	zuint8		   piece_index;
+	zuint8		   next_piece_index;
 	zsint8		   top;
 	zsint8		   full_row_indices[4];
 	zuint8		   full_row_count;
-	zuint8		   piece_index;
-	zuint8		   piece_rotation;
-	zuint8		   next_piece_index;
 } Tetris;
 
 typedef zuint8 TetrisResult;
 
+#define TETRIS_RESULT_OK	   0
 #define TETRIS_RESULT_HIT	   1
 #define TETRIS_RESULT_CONSOLIDATED 2
 #define TETRIS_RESULT_GAME_OVER    3
@@ -92,7 +92,7 @@ TETRIS_API extern TetrisPiece const tetris_pieces[TETRIS_PIECE_COUNT][4];
 
 TETRIS_API void		tetris_initialize      (Tetris*		object,
 						TetrisCell*	matrix,
-						Z2DSInt8	size,
+						Z2DSInt8	matrix_size,
 						zuint8		next_piece_index);
 
 TETRIS_API void		tetris_insert_piece    (Tetris*		object,
