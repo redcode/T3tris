@@ -5,8 +5,3 @@
 Copyright (C) 2000-2018 Manuel Sainz de Baranda y Goñi.
 
 This library implements the logic behing famous Tetris puzzle game.
-
-
-TETRIS_DEPENDENCIES_H
-TETRIS_STATIC
-TETRIS_USE_C_STANDARD_LIBRARY
